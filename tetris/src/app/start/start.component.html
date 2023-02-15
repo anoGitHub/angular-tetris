@@ -1,1 +1,46 @@
-<p>start works!</p>
+<header>Welcome! This is the game</header>
+<body>
+  <form #userForm="ngForm" (submit)="sendingIntroFormData(userForm.form)">
+    <div class="box">
+      <h1>Fill the form to continue</h1>
+      <label>
+        <span>Player name:</span>
+        <input
+          class="wpis"
+          required
+          type="text"
+          name="name"
+          minlength="3"
+          maxlength="50"
+          ngModel
+          #nameModel="ngModel"
+          placeholder="Enter your name"
+        />
+        <p *ngIf="nameModel.touched && nameModel.invalid">Name is too short</p>
+      </label>
+      <br />
+      <label>
+        <span>Player email:</span>
+        <input
+          class="wpis"
+          required
+          type="text"
+          name="email"
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+          ngModel
+          #emailModel="ngModel"
+          placeholder="Enter your email here"
+        />
+        <p *ngIf="emailModel.touched && emailModel.invalid">Email is wrong</p>
+      </label>
+      <br />
+      <button
+        class="button"
+        type="submit"
+        [disabled]="userForm.valid === false"
+      >
+        Start the game
+      </button>
+    </div>
+  </form>
+</body>

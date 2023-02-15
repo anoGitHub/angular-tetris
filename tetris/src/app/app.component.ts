@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'tetris';
+  public playerLogged:boolean = false;
+
+  public logInFunction() {
+    this.playerLogged = !this.playerLogged;
+  }
 }
