@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { StartComponent } from './start/start.component';
 import { GameComponent } from './game/game.component';
 import { FormsModule } from '@angular/forms';
+import { TetrisCoreComponent, TetrisCoreModule } from 'ngx-tetris';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { FormsModule } from '@angular/forms';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    TetrisCoreModule
   ],
   providers: [],
   bootstrap: [AppComponent]
