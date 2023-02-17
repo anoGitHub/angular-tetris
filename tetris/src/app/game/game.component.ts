@@ -5,16 +5,6 @@ export interface historyList {
   gameEvent: string
 }
 
-export class historyData {
-public timeStamp: number;
-public gameEvent: string;
-
-  constructor(timeStamp: number, gameEvent:string) {				
-    this.timeStamp = timeStamp;
-    this.gameEvent = gameEvent
-   }
-  }
-
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -28,8 +18,10 @@ export class GameComponent {
   @Input() userName: string = '';
   @Input() userEmail: string = '';
 
-  public historyList: Array<historyData> = []; 
+  public historyList: Array<historyList> = []; 
   public actionCategories: Array<string> = []; 
+
+  public gameEvent!: string;
 
   public points: number = 0;
   public timePlayed: number = 0;
