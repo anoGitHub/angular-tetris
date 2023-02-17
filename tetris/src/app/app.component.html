@@ -1,5 +1,17 @@
-<body>
-  <app-start *ngIf="playerLogged === false"></app-start>
+<body class="body">
+  <app-start
+    *ngIf="playerLogged === false"
+    (logOn)="logSwitchFunction()"
+    (userName)="userNameFunction($event)"
+    (userEmail)="userEmailFunction($event)"
+  >
+  </app-start>
 
-  <app-game *ngIf></app-game>
+  <app-game
+    *ngIf="playerLogged === true"
+    [userName]="userName"
+    [userEmail]="userEmail"
+    (logOff)="logSwitchFunction()"
+  >
+  </app-game>
 </body>

@@ -1,6 +1,6 @@
 <header>Welcome! This is the game</header>
 <body>
-  <form #userForm="ngForm" (submit)="sendingIntroFormData(userForm.form)">
+  <form #userForm="ngForm" (submit)="sendUserData(userForm.form)">
     <div class="box">
       <h1>Fill the form to continue</h1>
       <label>
@@ -12,11 +12,13 @@
           name="name"
           minlength="3"
           maxlength="50"
+          #playerName="ngModel"
           ngModel
-          #nameModel="ngModel"
           placeholder="Enter your name"
         />
-        <p *ngIf="nameModel.touched && nameModel.invalid">Name is too short</p>
+        <p *ngIf="playerName.touched && playerName.invalid">
+          Name is too short
+        </p>
       </label>
       <br />
       <label>
@@ -28,10 +30,10 @@
           name="email"
           pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
           ngModel
-          #emailModel="ngModel"
+          #playerMail="ngModel"
           placeholder="Enter your email here"
         />
-        <p *ngIf="emailModel.touched && emailModel.invalid">Email is wrong</p>
+        <p *ngIf="playerMail.touched && playerMail.invalid">Email is wrong</p>
       </label>
       <br />
       <button

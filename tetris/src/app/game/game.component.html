@@ -1,13 +1,114 @@
-<p>game works!</p>
-<tetris-core #game> </tetris-core>
-<button (click)="game.actionRotate()">Rotate</button>
-<!-- <tetris-core #game (lineCleared)="game.onLineCleared()"></tetris-core> -->
+<header>
+  <h1>Hello {{ userName }}!</h1>
+  <h3>{{ userEmail }}</h3>
+</header>
+<body>
+  <button
+    class="button"
+    value="false"
+    (click)="
+      backToTheStart(); game.actionStop(); game.actionReset(); clearList()
+    "
+  >
+    End game
+  </button>
+  <div class="box">
+    <p class="text">Game state: {{ gameState }}</p>
+    <p class="text">Points: {{ points }}</p>
+    <p class="text">Your time is: {{ timePlayed }} seconds</p>
+  </div>
+  <table>
+    <td>
+      <br />
+      <br />
+      <br />
+      <button class="button" (click)="game.actionRotate()">Rotate</button>
+      <br />
+      <button class="button" (click)="game.actionLeft()">Left</button>
+      <br />
+      <button class="button" (click)="game.actionRight()">Right</button>
+      <br />
+      <button class="button" (click)="game.actionDown()">Down</button>
+      <br />
+      <button class="button" (click)="game.actionDrop()">Drop</button>
+    </td>
+    <td>
+      <tr>
+        <button
+          *ngIf="gameState === 'Press play' || gameState === 'Paused'"
+          class="button"
+          #buttonStart
+          value="Playing"
+          (click)="
+            game.actionStart(); gameStates(buttonStart.value); startTimer()
+          "
+        >
+          Play
+        </button>
 
-<button (click)="game.actionStart()">Start</button>
-<button (click)="game.actionStop()">Stop</button>
-<button (click)="game.actionReset()">Reset</button>
-<button (click)="game.actionRotate()">Rotate</button>
-<button (click)="game.actionLeft()">Left</button>
-<button (click)="game.actionRight()">Right</button>
-<button (click)="game.actionDown()">Down</button>
-<button (click)="game.actionDrop()">Drop</button>
+        <button
+          *ngIf="gameState === 'Playing'"
+          class="button"
+          #buttonPause
+          value="Paused"
+          (click)="game.actionStop(); gameStates(buttonPause.value)"
+        >
+          Pause
+        </button>
+
+        <button
+          class="button"
+          #buttonReset
+          value="Press play"
+          (click)="
+            gameStates(buttonReset.value);
+            game.actionStop();
+            game.actionReset();
+            clearList()
+          "
+        >
+          Reset
+        </button>
+      </tr>
+      <tr>
+        <br />
+        <tetris-core
+          class="game"
+          #game
+          (lineCleared)="onLineCleared()"
+          (gameOver)="onGameOver()"
+        ></tetris-core>
+      </tr>
+    </td>
+    <td>
+      <br />
+      <p class="text"><b> Game history: </b></p>
+
+      <p class="text">
+        Filter by action:
+        <select class="button" (change)="categoryEventChange($event)">
+          <option>-Select action-</option>
+          >
+          <option
+            *ngFor="let option of actionCategories"
+            [value]="option"
+            [attr.selected]="option === selectedOption ? true : null"
+          >
+            {{ option }}
+          </option>
+        </select>
+      </p>
+      <br />
+      <br />
+      <div
+        class="box"
+        *ngFor="let event of historyList | filter : selectedOption"
+      >
+        <div class="text">
+          Time: {{ event.timeStamp | date : "dd.M.YYYYr H:mm:ss" }}, event:
+          {{ event.gameEvent }}
+        </div>
+      </div>
+    </td>
+  </table>
+</body>
