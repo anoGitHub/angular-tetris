@@ -4,11 +4,12 @@
 </header>
 <body>
   <button
+    [routerLink]="['/start']"
     class="button"
     value="false"
-    (click)="
-      backToTheStart(); game.actionStop(); game.actionReset(); clearList()
-    "
+    (click)="game.actionStop()"
+    (click)="game.actionReset()"
+    (click)="clearList()"
   >
     End game
   </button>

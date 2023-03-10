@@ -1,100 +1,118 @@
-import {Component, Output, EventEmitter, Input} from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserInfoService } from '../user-info.service';
 
 export interface historyList {
   timeStamp: number;
-  gameEvent: string
+  gameEvent: string;
 }
 
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  styleUrls: ['./game.component.scss'],
 })
+export class GameComponent implements OnInit {
+  public userName: string = '';
+  public userEmail: string = '';
 
-export class GameComponent {
+  constructor(
+    private _userCredentialsService: UserInfoService,
+    private _router: Router
+  ) {
+    if (this._userCredentialsService.isUserDataPassed() === false) {
+      this._router.navigate(['/start']);
+    }
+  }
+  ngOnInit() {
+    this._userCredentialsService.name.subscribe((data) => {
+      this.userName = data;
+    });
+  }
 
-  @Output() logOff = new EventEmitter();
+  // @Output() logOff = new EventEmitter();
 
-  @Input() userName: string = '';
-  @Input() userEmail: string = '';
-
-  public historyList: Array<historyList> = []; 
-  public actionCategories: Array<string> = []; 
+  public historyList: Array<historyList> = [];
+  public actionCategories: Array<string> = [];
 
   public gameEvent!: string;
 
   public points: number = 0;
   public timePlayed: number = 0;
-  public timeDisplayed: number = 0; 
+  public timeDisplayed: number = 0;
   public timeStamp: number = 0;
 
-  public gameState: string = 'Press play'; 
-  public playing: boolean = false; 
+  public gameState: string = 'Press play';
+  public playing: boolean = false;
 
+  public selectedOption: string = 'All';
 
-  public selectedOption: string = 'All'; 
-
-  public selectCategories(){
-    this.actionCategories = this.historyList.map((product) => product.gameEvent)
+  public selectCategories() {
+    this.actionCategories = this.historyList.map(
+      (product) => product.gameEvent
+    );
     this.actionCategories = [...new Set(this.actionCategories)];
-    this.actionCategories.unshift('All'); 
+    this.actionCategories.unshift('All');
   }
 
-  public categoryEventChange($event: Event){
+  public categoryEventChange($event: Event) {
     this.selectedOption = ($event.target as HTMLOptionElement).value;
   }
 
-  public clearList(){
-    this.historyList=[];
-    this.actionCategories=[];
-    this.timePlayed=0;
-    this.timeDisplayed=0;
+  public clearList() {
+    this.historyList = [];
+    this.actionCategories = [];
+    this.timePlayed = 0;
+    this.timeDisplayed = 0;
     this.points = 0;
-  } 
-
-  public backToTheStart(){
-    this.logOff.emit()
   }
 
-  public addEventToHistoryList = (gameEvent: string) => {			
-    const addedEvent = {timeStamp: Date.now(), gameEvent: gameEvent};
+  // public backToTheStart(){
+  //   this.logOff.emit()
+  // }
+
+  public addEventToHistoryList = (gameEvent: string) => {
+    const addedEvent = { timeStamp: Date.now(), gameEvent: gameEvent };
     this.historyList.push(addedEvent);
     this.selectCategories();
-  }
+  };
 
-  public onLineCleared(){
+  public onLineCleared() {
     this.points = this.points + 1;
-    this.addEventToHistoryList('Line cleared')
+    this.addEventToHistoryList('Line cleared');
   }
 
-  public gameStates(value: string){
+  public gameStates(value: string) {
     this.gameState = value;
 
-    if (value === 'Playing' && this.timePlayed < 1){
-      this.addEventToHistoryList('Start')
-    };
-    if (value === 'Paused'){
-      this.addEventToHistoryList('Pause')
-    };
-    if (value === 'Playing' && this.timePlayed > 0){
-      this.addEventToHistoryList('Resume')
-    };
+    if (value === 'Playing' && this.timePlayed < 1) {
+      this.addEventToHistoryList('Start');
+    }
+    if (value === 'Paused') {
+      this.addEventToHistoryList('Pause');
+    }
+    if (value === 'Playing' && this.timePlayed > 0) {
+      this.addEventToHistoryList('Resume');
+    }
   }
 
-  public startTimer(){
-    if (this.gameState === 'Playing'){	
-    const time = setInterval(() => {					
-      this.timePlayed++;
-        if (this.gameState === 'Press play' || this.gameState === 'Paused'|| this.gameState === 'Game over'){
+  public startTimer() {
+    if (this.gameState === 'Playing') {
+      const time = setInterval(() => {
+        this.timePlayed++;
+        if (
+          this.gameState === 'Press play' ||
+          this.gameState === 'Paused' ||
+          this.gameState === 'Game over'
+        ) {
           clearInterval(time);
-          }
-        }, 100);
-      }
+        }
+      }, 100);
     }
+  }
 
-  public onGameOver(){
+  public onGameOver() {
     this.gameStates('Game over');
-    this.addEventToHistoryList('Game over')
-    } 
-
+    this.addEventToHistoryList('Game over');
+  }
 }

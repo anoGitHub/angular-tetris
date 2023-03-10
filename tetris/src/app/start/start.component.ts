@@ -1,20 +1,31 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserInfoService } from '../user-info.service';
 
 @Component({
   selector: 'app-start',
   templateUrl: './start.component.html',
-  styleUrls: ['./start.component.scss']
+  styleUrls: ['./start.component.scss'],
 })
 export class StartComponent {
-  @Output() userName = new EventEmitter();
-	@Output() userEmail = new EventEmitter();
-	@Output() logOn = new EventEmitter();
+  text: string = '';
 
-	public sendUserData(form: FormGroup) {
-		this.userName.emit(form.value.name);
-		this.userEmail.emit(form.value.email);
-		this.logOn.emit();
-	}
+  public constructor(
+    private _router: Router,
+    private _userCredentialsService: UserInfoService
+  ) {}
+
+  public sendUserData(form: FormGroup) {
+    this._userCredentialsService.credentialsPassed();
+    this._userCredentialsService.showUserData(form.value.name);
+    this._router.navigate(['game']);
+  }
 }
-

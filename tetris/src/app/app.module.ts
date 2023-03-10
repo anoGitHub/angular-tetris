@@ -7,18 +7,27 @@ import { FormsModule } from '@angular/forms';
 import { TetrisCoreComponent, TetrisCoreModule } from 'ngx-tetris';
 import { GameComponent } from './game/game.component';
 import { FilterPipe } from './filter.pipe';
+import { RouterModule } from '@angular/router';
+import { SortPipe } from './sort.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     StartComponent,
     GameComponent,
-    FilterPipe
+    FilterPipe,
+    SortPipe
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    TetrisCoreModule
+    TetrisCoreModule,
+    RouterModule.forRoot([
+      //przyjmuje pary ściezka komponent
+      {path:'start', component: StartComponent},
+      {path:'game', component: GameComponent},
+      {path:'**', redirectTo: '/start'}
+    ])
   ],
   providers: [],
   bootstrap: [AppComponent]
